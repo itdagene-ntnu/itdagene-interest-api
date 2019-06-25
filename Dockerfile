@@ -1,7 +1,24 @@
-FROM node:11
+FROM node:11-alpine
 
-WORKDIR app/
+WORKDIR /app
 
-COPY . ./
+COPY package.json /app
+COPY yarn.lock /app
 
-CMD "node server.js"
+RUN yarn
+
+COPY . /app
+
+EXPOSE 8000
+
+ARG EMAIL
+ARG YEAR
+ARG SHEET_ID
+ARG RECAPTCHA_SECRET
+
+ENV EMAIL=$EMAIL
+ENV YEAR=$YEAR
+ENV SHEET_ID=$SHEET_ID
+ENV RECAPTCHA_SECRET=$RECAPTCHA_SECRET
+
+CMD ["yarn", "start"]
