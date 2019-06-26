@@ -112,17 +112,23 @@ app.use(
 // POST endpoint. Takes the json from the from as input
 app.post('/', async function(req, res) {
   const entry = req.body;
+  console.log('Incoming request'.bgYellow);
 
   // Denne skal sjekke recaptcha, og retunerer et svar
   response = await recaptchaHandler(entry.recaptcha);
 
   if (response.data.success) {
+    console.log('SUCCESS'.bgGreen);
+    console.log('reCAPTCHA was correct'.green);
     interestHandler(entry);
     mailHander(entry);
 
     res.sendStatus(200);
     res.end();
   } else {
+    console.log('FAILURE'.bgRed);
+    console.log('reCAPTCHA was wrong'.red);
+
     res.sendStatus(403);
     res.end();
   }

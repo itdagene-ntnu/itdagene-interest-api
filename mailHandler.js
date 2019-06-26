@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const creds = require('./client_secret.json');
 const fs = require('fs');
 const path = require('path');
+const colors = require('colors');
 
 let transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -27,6 +28,8 @@ async function mailHandler(interest) {
       html: html
     });
   });
+  console.log('SUCCESS'.bgGreen);
+  console.log('Mail was sent'.green);
 }
 
 module.exports = mailHandler;

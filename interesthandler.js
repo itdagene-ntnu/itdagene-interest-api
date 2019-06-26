@@ -1,5 +1,6 @@
 const GoogleSpreadsheet = require('google-spreadsheet');
 const { promisify } = require('util');
+const colors = require('colors');
 
 const creds = require('./client_secret.json');
 
@@ -21,6 +22,16 @@ async function interestHandler(entryObject) {
     marathon: entryObject.marathon,
     melding: entryObject.message
   };
-  await promisify(sheet.addRow)(parsedRow);
+  const request = promisify(sheet.addRow)(parsedRow);
+
+  request
+    .then(() => {
+      console.log('SUCCESS'.bgGreen);
+      console.log('Interest was added'.green);
+    })
+    .catch(error => {
+      console.log('FAILURE'.bgRed);
+      console.log('Interest was not added'.red);
+    });
 }
 module.exports = interestHandler;
