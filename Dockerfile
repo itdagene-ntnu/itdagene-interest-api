@@ -1,5 +1,7 @@
 FROM node:11-alpine
 
+MAINTAINER Peder Smith <smith.peder@gmail.com>
+
 WORKDIR /app
 
 COPY package.json /app
