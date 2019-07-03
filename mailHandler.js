@@ -18,7 +18,7 @@ let transporter = nodemailer.createTransport({
 async function mailHandler(interest) {
   // Get the HTML from the template
   const html = fs
-    .readFileSync(path.resolve(__dirname, './mailTemplate_norsk'), 'utf8')
+    .readFileSync(path.resolve(__dirname, './mailTemplate_engelsk'), 'utf8')
     .replace('&lt;COMPANYNAME&gt;', interest.companyName)
     .replace('&lt;YEAR&gt;', process.env.YEAR)
     .replace(
@@ -33,7 +33,9 @@ async function mailHandler(interest) {
       interest.contactEmail
     }>`,
     subject: `itDAGENE ${process.env.YEAR}: ${interest.companyName}`,
-    text: 'Bekreftelse Interesse itDAGENE',
+    text: `itDAGENE ${process.env.YEAR}: ${
+      interest.companyName
+    } confirmation email`,
     html: html
   });
 }
