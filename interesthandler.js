@@ -1,6 +1,5 @@
 const GoogleSpreadsheet = require('google-spreadsheet');
 const { promisify } = require('util');
-const colors = require('colors');
 
 const creds = require('./client_secret.json');
 
@@ -11,7 +10,9 @@ async function interestHandler(entryObject) {
   const info = await promisify(doc.getInfo)();
   const sheet = info.worksheets[0];
 
-  // Add the new row
+  // Add the new row, add date, remove reCAPTCHA
+  // Could just be with a remove and an append, but i think
+  // think this gives a better overview over what date is sent
   const parsedRow = {
     dato: new Date().toLocaleString('no', { hour12: false }),
     bedriftsnavn: entryObject.companyName,
@@ -22,16 +23,15 @@ async function interestHandler(entryObject) {
     marathon: entryObject.marathon,
     melding: entryObject.message
   };
-  const request = promisify(sheet.addRow)(parsedRow);
 
-  request
-    .then(() => {
-      console.log('SUCCESS'.bgGreen);
-      console.log('Interest was added'.green);
-    })
-    .catch(error => {
-      console.log('FAILURE'.bgRed);
-      console.log('Interest was not added'.red);
-    });
+  const addRowAsync = promisify(sheet.addRow);
+
+  // Use promisify to return a promise
+  return addRowAsync(parsedRow).then(function(res) {
+    return {
+      success: true,
+      dato: res.dato
+    };
+  });
 }
 module.exports = interestHandler;

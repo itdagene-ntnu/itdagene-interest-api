@@ -1,7 +1,9 @@
 const axios = require('axios');
 
 async function recaptchaHandler(response) {
-  secret = process.env.RECAPTCHA_SECRET;
+  const secret = process.env.RECAPTCHA_SECRET;
+
+  // Returns an axios promise
   return axios
     .post(
       `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${response}`,

@@ -6,6 +6,7 @@ const colors = require('colors');
 const creds = require('./client_secret.json');
 
 async function checkConnection() {
+  let connected;
   // Try to access the sheet
   try {
     const doc = new GoogleSpreadsheet(process.env.SHEET_ID);
@@ -14,9 +15,13 @@ async function checkConnection() {
     const sheet = info.worksheets[0];
     console.log('SUCCESS'.bgGreen);
     console.log(`Access to sheet [${sheet.title}] was granted`.green);
+    connected = true;
   } catch {
     console.log('ERROR'.bgRed);
     console.log('Access to sheet was not granted'.red);
+    connected = false;
   }
+
+  return connected;
 }
 module.exports = checkConnection;

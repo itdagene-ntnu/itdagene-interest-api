@@ -33,9 +33,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-// Check the connection to the sheet
-checkConnection();
-
 // Logg String for printing response body
 const bodyString = req => ` {
   CompanyName: ${req.body.companyName}
@@ -112,29 +109,53 @@ app.use(
 // POST endpoint. Takes the json from the from as input
 app.post('/', async function(req, res) {
   const entry = req.body;
-  console.log('Incoming request'.bgYellow);
+  console.log('\n\nIncoming request'.bgYellow);
 
-  // Denne skal sjekke recaptcha, og retunerer et svar
-  response = await recaptchaHandler(entry.recaptcha);
-
-  if (response.data.success) {
+  const recaptchaResponse = await recaptchaHandler(entry.recaptcha);
+  if (recaptchaResponse.data.success) {
     console.log('SUCCESS'.bgGreen);
     console.log('reCAPTCHA was correct'.green);
-    interestHandler(entry);
-    mailHander(entry);
 
-    res.sendStatus(200);
-    res.end();
+    const interestResponse = await interestHandler(entry);
+    if (interestResponse.success) {
+      console.log('SUCCESS'.bgGreen);
+      console.log(`Interest was logged at ${interestResponse.dato}`.green);
+
+      const mailResponse = await mailHander(entry);
+      if (mailResponse) {
+        console.log('SUCCESS'.bgGreen);
+        console.log(`Mail with id ${mailResponse.messageId} was sent`.green);
+        console.log(mailResponse);
+
+        res.sendStatus(200);
+        res.end();
+      } else {
+        console.log('FAILURE'.bgRed);
+        console.log('Mail was not sent'.red);
+        res.sendStatus(500);
+        res.end();
+      }
+    } else {
+      console.log('FAILURE'.bgRed);
+      console.log('Interest was not logged'.red);
+      res.sendStatus(500);
+      res.end();
+    }
   } else {
     console.log('FAILURE'.bgRed);
     console.log('reCAPTCHA was wrong'.red);
-
-    res.sendStatus(403);
+    res.sendStatus(500);
     res.end();
   }
 });
 
-app.listen(port, () => {
+const server = app.listen(port, async () => {
   console.log('SUCCESS'.bgGreen);
-  console.log(`Interestform API is up on port:${port}!`.green);
+  console.log(`Interestform API is up on port:${port}`.green);
+
+  // Check the connection to the sheet
+  const connection = await checkConnection();
+  if (!connection) {
+    server.close();
+  }
 });
