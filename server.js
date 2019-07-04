@@ -107,7 +107,7 @@ app.use(
 );
 
 // POST endpoint. Takes the json from the from as input
-app.post('/', async function(req, res) {
+app.post('/api', async function(req, res) {
   const entry = req.body;
   console.log('\n\nIncoming request'.bgYellow);
 
