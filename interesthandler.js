@@ -21,7 +21,8 @@ async function interestHandler(entryObject) {
     telefon: entryObject.contactTlf,
     dag: entryObject.day,
     marathon: entryObject.marathon,
-    melding: entryObject.message
+    melding: entryObject.message,
+    engelsk: entryObject.english
   };
 
   const addRowAsync = promisify(sheet.addRow);
