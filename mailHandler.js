@@ -16,9 +16,15 @@ let transporter = nodemailer.createTransport({
 });
 
 async function mailHandler(interest) {
+  // Choose what tamplate to use
+  const templateName = interest.english
+    ? './mailTemplate_engelsk'
+    : './mailTemplate_norsk';
   // Get the HTML from the template
+  console.log(templateName);
+  console.log(interest);
   const html = fs
-    .readFileSync(path.resolve(__dirname, './mailTemplate_engelsk'), 'utf8')
+    .readFileSync(path.resolve(__dirname, templateName), 'utf8')
     .replace('&lt;COMPANYNAME&gt;', interest.companyName)
     .replace('&lt;YEAR&gt;', process.env.YEAR)
     .replace(
@@ -28,7 +34,7 @@ async function mailHandler(interest) {
 
   // Returns a promise from Nodemailer
   return transporter.sendMail({
-    from: `"itDAGENE ${process.env.YEAR} Interesse" <${process.env.EMAIL}>`,
+    from: `"itDAGENE ${process.env.YEAR}" <${process.env.EMAIL}>`,
     to: `${interest.contactPerson} - ${interest.companyName} <${
       interest.contactEmail
     }>`,
