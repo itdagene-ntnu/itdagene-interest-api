@@ -20,9 +20,9 @@ async function mailHandler(interest) {
   const templateName = interest.english
     ? './mailTemplate_engelsk'
     : './mailTemplate_norsk';
-  // Get the HTML from the template
-  console.log(templateName);
-  console.log(interest);
+
+  // Get the HTML from the template then,
+  // Replace elements in the template to make it 'DYNAMIC AF'
   const html = fs
     .readFileSync(path.resolve(__dirname, templateName), 'utf8')
     .replace('&lt;COMPANYNAME&gt;', interest.companyName)

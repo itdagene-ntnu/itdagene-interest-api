@@ -28,11 +28,20 @@ async function interestHandler(entryObject) {
   const addRowAsync = promisify(sheet.addRow);
 
   // Use promisify to return a promise
-  return addRowAsync(parsedRow).then(function(res) {
-    return {
-      success: true,
-      dato: res.dato
-    };
-  });
+  // Returns true if the row is added with no problem,
+  // and returns false if the google throws an error
+  return addRowAsync(parsedRow)
+    .then(row => {
+      return {
+        success: true,
+        dato: row.dato
+      };
+    })
+    .catch(error => {
+      return {
+        success: false,
+        error: error
+      };
+    });
 }
 module.exports = interestHandler;
