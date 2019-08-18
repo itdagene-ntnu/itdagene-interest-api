@@ -1,9 +1,9 @@
 // Express
 const express = require('express');
 const bodyParser = require('body-parser');
+const colors = require('colors');
 
 // Logging
-const colors = require('colors');
 const morgan = require('morgan');
 const path = require('path');
 const rfs = require('rotating-file-stream');

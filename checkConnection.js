@@ -1,8 +1,6 @@
 const GoogleSpreadsheet = require('google-spreadsheet');
 const { promisify } = require('util');
 
-const colors = require('colors');
-
 const creds = require('./client_secret.json');
 
 async function checkConnection() {
@@ -16,9 +14,9 @@ async function checkConnection() {
     console.log('SUCCESS'.bgGreen);
     console.log(`Access to sheet [${sheet.title}] was granted`.green);
     connected = true;
-  } catch {
+  } catch (e) {
     console.log('ERROR'.bgRed);
-    console.log('Access to sheet was not granted'.red);
+    console.log(`Access to sheet was not granted with ${e}`.red);
     connected = false;
   }
 

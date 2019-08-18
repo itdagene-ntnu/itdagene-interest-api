@@ -3,7 +3,7 @@ const creds = require('./client_secret.json');
 const fs = require('fs');
 const path = require('path');
 
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
   secure: true,
@@ -35,13 +35,9 @@ async function mailHandler(interest) {
   // Returns a promise from Nodemailer
   return transporter.sendMail({
     from: `"itDAGENE ${process.env.YEAR}" <${process.env.EMAIL}>`,
-    to: `${interest.contactPerson} - ${interest.companyName} <${
-      interest.contactEmail
-    }>`,
+    to: `${interest.contactPerson} - ${interest.companyName} <${interest.contactEmail}>`,
     subject: `itDAGENE ${process.env.YEAR}: ${interest.companyName}`,
-    text: `itDAGENE ${process.env.YEAR}: ${
-      interest.companyName
-    } confirmation email`,
+    text: `itDAGENE ${process.env.YEAR}: ${interest.companyName} confirmation email`,
     html: html
   });
 }
