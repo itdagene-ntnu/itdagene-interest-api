@@ -11,12 +11,12 @@ async function checkConnection() {
     await promisify(doc.useServiceAccountAuth)(creds);
     const info = await promisify(doc.getInfo)();
     const sheet = info.worksheets[0];
-    console.log('SUCCESS'.bgGreen);
-    console.log(`Access to sheet [${sheet.title}] was granted`.green);
+    console.log('SUCCESS');
+    console.log(`Access to sheet [${sheet.title}] was granted`);
     connected = true;
   } catch (e) {
-    console.log('ERROR'.bgRed);
-    console.log(`Access to sheet was not granted with ${e}`.red);
+    console.log('ERROR');
+    console.log(`Access to sheet was not granted with ${e}`);
     connected = false;
   }
 

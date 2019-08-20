@@ -1,12 +1,9 @@
 // Express
 const express = require('express');
 const bodyParser = require('body-parser');
-const colors = require('colors');
 
 // Logging
 const morgan = require('morgan');
-const path = require('path');
-const rfs = require('rotating-file-stream');
 const uuidv1 = require('uuid/v1');
 
 // API security
@@ -18,8 +15,15 @@ const recaptchaHandler = require('./recaptchaHandler');
 const mailHander = require('./mailHandler');
 const checkConnection = require('./checkConnection');
 
+// Log strings
+const logging = require('./loggStrings');
+
 const app = express();
 const port = 8000;
+
+// Sentry
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: process.env.SENTRY_DNS });
 
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,52 +37,9 @@ app.use(function(req, res, next) {
   next();
 });
 
-// Logg String for printing response body
-const bodyString = req => ` {
-  CompanyName: ${req.body.companyName}
-  ContactPerson: ${req.body.contactPerson}
-  ContactEmail: ${req.body.contactEmail}
-  ContactTlf: ${req.body.contactTlf}
-  Day: ${req.body.day}
-  Marathon: ${req.body.marathon}
-  Message: ${req.body.message}
-}`;
-
-// Logg-String for printing immediate request
-const tinyLoggString = `
-============:date[web]===========
-> Request
-ID:\t:id
-Addr\t::remote-addr
-User\t:remote-user
-Method\t:method
-`;
-
-// Logg-String for printing full response
-const loggString = `
-> Response
-ID:\t:id
-Date\t:date[web]
-Addr\t::remote-addr
-User\t:remote-user
-Method\t:method
-Url\t":url"
-Ref\t":referrer HTTP/:http-version"
-Status\t:status
-Time\t:response-time ms
-Body\t:body
-====================================================
-`;
-
-// Create a rotating write stream
-const accessLogStream = rfs('access.log', {
-  interval: '1d', // rotate daily
-  path: path.join(__dirname, 'log')
-});
-
 // Create custom body token
 morgan.token('body', function(req, res) {
-  return bodyString(req);
+  return logging.bodyString(req);
 });
 
 // Create custom id token
@@ -93,65 +54,72 @@ morgan.token('id', function getId(req) {
 
 // First print short timestamp
 app.use(
-  morgan(tinyLoggString, {
+  morgan(logging.tinyLoggString, {
     immediate: true,
-    stream: accessLogStream
+    stream: logging.accessLogStream
   })
 );
 
 // Then print long response
 app.use(
-  morgan(loggString, {
-    stream: accessLogStream
+  morgan(logging.loggString, {
+    stream: logging.accessLogStream
   })
 );
 
 // POST endpoint. Takes the json from the from as input
 app.post('/api', async function(req, res) {
   const entry = req.body;
-  console.log('\n\nIncoming request'.bgYellow);
+  console.log(
+    '\n\nIncoming request at',
+    new Date().toLocaleString('no', { hour12: false })
+  );
+  console.log(entry);
 
   const recaptchaResponse = await recaptchaHandler(entry.recaptcha);
   if (recaptchaResponse.data.success) {
-    console.log('SUCCESS'.bgGreen);
-    console.log('reCAPTCHA was correct'.green);
+    console.log('SUCCESS');
+    console.log('reCAPTCHA was correct');
 
     const interestResponse = await interestHandler(entry);
     if (interestResponse.success) {
-      console.log('SUCCESS'.bgGreen);
-      console.log(`Interest was logged at ${interestResponse.dato}`.green);
+      console.log('SUCCESS');
+      console.log(`Interest was logged at ${interestResponse.dato}`);
 
       const mailResponse = await mailHander(entry);
       if (mailResponse) {
-        console.log('SUCCESS'.bgGreen);
-        console.log(`Mail with id ${mailResponse.messageId} was sent`.green);
+        console.log('SUCCESS');
+        console.log(`Mail with id ${mailResponse.messageId} was sent`);
         console.log(mailResponse);
 
         res.sendStatus(200);
         res.end();
       } else {
-        console.log('FAILURE'.bgRed);
-        console.log('Mail was not sent'.red);
+        console.log('FAILURE');
+        console.log('Mail was not sent');
+        Sentry.captureException('Mail was not sent');
         res.sendStatus(500);
         res.end();
       }
     } else {
-      console.log('FAILURE'.bgRed);
-      console.log('Interest was not logged'.red);
+      console.log('FAILURE');
+      console.log('Interest was not logged');
+      Sentry.captureException('Interest was not logged');
       res.sendStatus(500);
       res.end();
     }
   } else {
-    console.log('FAILURE'.bgRed);
-    console.log('reCAPTCHA was wrong'.red);
+    console.log('FAILURE');
+    console.log('reCAPTCHA was wrong');
+    Sentry.captureException('reCAPTCHA was wrong');
     res.sendStatus(500);
     res.end();
   }
 });
 
 const server = app.listen(port, async () => {
-  console.log('SUCCESS'.bgGreen);
-  console.log(`Interestform API is up on port:${port}`.green);
+  console.log('SUCCESS');
+  console.log(`Interestform API is up on port:${port}`);
 
   // Check the connection to the sheet
   const connection = await checkConnection();
