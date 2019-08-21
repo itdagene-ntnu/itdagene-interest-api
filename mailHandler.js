@@ -37,7 +37,7 @@ async function mailHandler(interest) {
     from: `"itDAGENE ${process.env.YEAR}" <${process.env.EMAIL}>`,
     to: `${interest.contactPerson} - ${interest.companyName} <${interest.contactEmail}>`,
     subject: `itDAGENE ${process.env.YEAR}: ${interest.companyName}`,
-    text: `itDAGENE ${process.env.YEAR}: ${interest.companyName} confirmation email`,
+    text: `itDAGENE ${process.env.YEAR}: ${interest.companyName} confirmation email.`,
     html: html
   });
 }

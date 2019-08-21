@@ -1,7 +1,9 @@
 const axios = require('axios');
 
 async function recaptchaHandler(response) {
-  const secret = process.env.RECAPTCHA_SECRET;
+  const secret = process.env.RECAPTCHA_SECRET
+    ? process.env.RECAPTCHA_SECRET
+    : '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
 
   // Returns an axios promise
   return axios
