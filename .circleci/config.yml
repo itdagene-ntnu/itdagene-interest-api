@@ -19,7 +19,7 @@ jobs:
             - ./node_modules/
           key: deps-{{ checksum "yarn.lock" }}
 
-      - lint:
+      - run:
           name: lint
           command: |
             yarn lint
