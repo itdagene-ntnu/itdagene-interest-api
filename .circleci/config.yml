@@ -24,11 +24,6 @@ jobs:
           command: |
             yarn lint
 
-      - run:
-          name: build
-          command: |
-            yarn build
-
   build-docker:
     machine: true
     steps:
