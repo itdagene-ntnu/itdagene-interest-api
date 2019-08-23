@@ -19,6 +19,11 @@ jobs:
             - ./node_modules/
           key: deps-{{ checksum "yarn.lock" }}
 
+      - lint:
+          name: lint
+          command: |
+            yarn lint
+
       - run:
           name: build
           command: |
