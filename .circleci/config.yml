@@ -1,0 +1,50 @@
+version: 2
+jobs:
+  tests:
+    docker:
+      - image: circleci/node:latest-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "yarn.lock" }}
+      - run:
+          name: install dependencies
+          command: |
+            yarn
+
+      - save_cache:
+          paths:
+            - ./node_modules/
+          key: deps-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: build
+          command: |
+            yarn build
+
+  build-docker:
+    machine: true
+    steps:
+      - checkout
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: |
+          RELEASE=${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
+          docker build -t itdagene/itdagene-interest:$CIRCLE_BRANCH .
+      - run: docker tag itdagene/itdagene-interest-api:$CIRCLE_BRANCH itdagene/itdagene-interest-api:${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
+      - run: docker push itdagene/itdagene-interest-api:${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
+      - run: docker push itdagene/itdagene-interest-api:$CIRCLE_BRANCH
+
+workflows:
+  version: 2
+  on_push:
+    jobs:
+      - tests
+      - build-docker:
+          requires:
+            - tests
+          filters:
+            branches:
+              only:
+                - prod

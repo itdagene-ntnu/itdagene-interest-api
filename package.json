@@ -9,7 +9,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "lint": "yarn run lint:js && yarn run lint:prettier",
+    "lint:js": "eslint .",
+    "lint:prettier": "prettier '**/*.{js,css,md}' --check"
   },
   "dependencies": {
     "@sentry/node": "^5.6.1",
