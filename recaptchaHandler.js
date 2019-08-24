@@ -1,9 +1,11 @@
 const axios = require('axios');
 
+// Use dotenv to get variables from .env
+const dotenv = require('dotenv');
+dotenv.config();
+
 async function recaptchaHandler(response) {
-  const secret = process.env.RECAPTCHA_SECRET
-    ? process.env.RECAPTCHA_SECRET
-    : '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
+  const secret = process.env.RECAPTCHA_SECRET;
 
   // Returns an axios promise
   return axios

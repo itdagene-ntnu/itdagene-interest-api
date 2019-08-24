@@ -3,6 +3,10 @@ const creds = require('./client_secret.json');
 const fs = require('fs');
 const path = require('path');
 
+// Use dotenv to get variables from .env
+const dotenv = require('dotenv');
+dotenv.config();
+
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,

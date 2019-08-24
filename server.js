@@ -16,6 +16,10 @@ const Sentry = require('@sentry/node');
 const app = express();
 const port = 8000;
 
+// Use dotenv to get variables from .env
+const dotenv = require('dotenv');
+dotenv.config();
+
 // Only run sentry errors in production
 if (process.env.NODE_ENV === 'production') {
   console.log(`===Running in ${process.env.NODE_ENV} mode===`);

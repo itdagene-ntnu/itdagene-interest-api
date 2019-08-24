@@ -3,6 +3,10 @@ const { promisify } = require('util');
 
 const creds = require('./client_secret.json');
 
+// Use dotenv to get variables from .env
+const dotenv = require('dotenv');
+dotenv.config();
+
 async function checkConnection() {
   let connected;
   // Try to access the sheet
