@@ -28,7 +28,7 @@
     "nodemailer": "^6.4.6",
     "nodemon": "^1.19.1",
     "rotating-file-stream": "^1.4.3",
-    "uuid": "^3.3.3"
+    "uuid": "^8.3.0"
   },
   "prettier": {
     "singleQuote": true
