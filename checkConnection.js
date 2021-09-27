@@ -1,5 +1,4 @@
-const GoogleSpreadsheet = require('google-spreadsheet');
-const { promisify } = require('util');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const creds = require('./client_secret.json');
 
@@ -12,9 +11,9 @@ async function checkConnection() {
   // Try to access the sheet
   try {
     const doc = new GoogleSpreadsheet(process.env.SHEET_ID);
-    await promisify(doc.useServiceAccountAuth)(creds);
-    const info = await promisify(doc.getInfo)();
-    const sheet = info.worksheets[0];
+    await doc.useServiceAccountAuth(creds);
+    await doc.loadInfo();
+    const sheet = doc.sheetsByIndex[0];
     console.log('SUCCESS');
     console.log(`Access to sheet [${sheet.title}] was granted`);
     connected = true;
