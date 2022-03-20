@@ -10,6 +10,7 @@ const bodyString = req => ` {
   Day: ${req.body.day}
   Marathon: ${req.body.marathon}
   Message: ${req.body.message}
+  Digital: ${req.body.digital}
 }`;
 
 // Logg-String for printing immediate request
