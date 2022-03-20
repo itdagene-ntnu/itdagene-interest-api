@@ -32,14 +32,14 @@ app.use(
     referrerPolicy: true,
     featurePolicy: {
       features: {
-        vibrate: ["'none'"]
-      }
-    }
+        vibrate: ["'none'"],
+      },
+    },
   })
 );
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   // Only allow requests from itdagene in production
   const origin = process.env.NODE_ENV === 'production' ? '*.itdagene.no' : '*';
   res.header('Access-Control-Allow-Origin', origin);
@@ -59,7 +59,7 @@ const uuidv1 = require('uuid/v1');
 // Assigns a cistom id using uuidv1
 // Use logg templates to logg both initail request
 // and full response
-morgan.token('body', function(req, res) {
+morgan.token('body', function (req, res) {
   return logging.bodyString(req);
 });
 function assignId(req, res, next) {
@@ -73,17 +73,17 @@ morgan.token('id', function getId(req) {
 app.use(
   morgan(logging.tinyLoggString, {
     immediate: true,
-    stream: logging.accessLogStream
+    stream: logging.accessLogStream,
   })
 );
 app.use(
   morgan(logging.loggString, {
-    stream: logging.accessLogStream
+    stream: logging.accessLogStream,
   })
 );
 
 // POST endpoint. Takes the json from the from as input
-app.post('/api', async function(req, res) {
+app.post('/api', async function (req, res) {
   const entry = req.body;
   const time = new Date().toLocaleString('no', { hour12: false });
   console.log(time, '\n\nIncoming request at');

@@ -14,14 +14,14 @@ async function recaptchaHandler(response) {
       {},
       {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-        }
+          'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
       }
     )
-    .then(function(res) {
+    .then(function (res) {
       return {
         status: res.status,
-        data: res.data
+        data: res.data,
       };
     });
 }

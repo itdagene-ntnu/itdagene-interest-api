@@ -15,8 +15,8 @@ const transporter = nodemailer.createTransport({
     type: 'OAuth2',
     user: process.env.EMAIL,
     serviceClient: creds.client_id,
-    privateKey: creds.private_key
-  }
+    privateKey: creds.private_key,
+  },
 });
 
 async function mailHandler(interest) {
@@ -42,7 +42,7 @@ async function mailHandler(interest) {
     to: `${interest.contactPerson} - ${interest.companyName} <${interest.contactEmail}>`,
     subject: `itDAGENE ${process.env.YEAR}: ${interest.companyName}`,
     text: `itDAGENE ${process.env.YEAR}: ${interest.companyName} confirmation email.`,
-    html: html
+    html: html,
   });
 }
 

@@ -2,7 +2,7 @@ const rfs = require('rotating-file-stream');
 const path = require('path');
 
 // Logg String for printing response body
-const bodyString = req => ` {
+const bodyString = (req) => ` {
   CompanyName: ${req.body.companyName}
   ContactPerson: ${req.body.contactPerson}
   ContactEmail: ${req.body.contactEmail}
@@ -41,7 +41,7 @@ Body\t:body
 // Create a rotating write stream
 const accessLogStream = rfs('access.log', {
   interval: '1d', // rotate daily
-  path: path.join(__dirname, 'log')
+  path: path.join(__dirname, 'log'),
 });
 
 module.exports.bodyString = bodyString;
