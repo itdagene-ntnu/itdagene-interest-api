@@ -26,23 +26,23 @@ async function interestHandler(entryObject) {
     Maraton: entryObject.marathon,
     Digital: entryObject.digital,
     Melding: entryObject.message,
-    Engelsk: entryObject.english
+    Engelsk: entryObject.english,
   };
 
   // Returns true if the row is added with no problem,
   // and returns false if the google throws an error
   return sheet
     .addRow(parsedRow)
-    .then(row => {
+    .then((row) => {
       return {
         success: true,
-        dato: row.dato
+        dato: row.dato,
       };
     })
-    .catch(error => {
+    .catch((error) => {
       return {
         success: false,
-        error: error
+        error: error,
       };
     });
 }
