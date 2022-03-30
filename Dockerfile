@@ -1,6 +1,6 @@
-FROM node:11-alpine
+FROM node:14-alpine
 
-MAINTAINER Peder Smith <smith.peder@gmail.com>
+LABEL org.opencontainers.image.authors="web@itdagene.no"
 
 WORKDIR /app
 
