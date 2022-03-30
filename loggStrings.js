@@ -40,7 +40,7 @@ Body\t:body
 `;
 
 // Create a rotating write stream
-const accessLogStream = rfs('access.log', {
+const accessLogStream = rfs.createStream('access.log', {
   interval: '1d', // rotate daily
   path: path.join(__dirname, 'log'),
 });
