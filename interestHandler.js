@@ -24,7 +24,6 @@ async function interestHandler(entryObject) {
     Telefon: entryObject.contactTlf,
     Dag: entryObject.day,
     Maraton: entryObject.marathon,
-    Digital: entryObject.digital,
     Melding: entryObject.message,
     Engelsk: entryObject.english,
   };
